@@ -9,22 +9,8 @@ export default function Perks({selected, onChange}) {
                 onChange([...selected.filter(selectedName => selectedName !== name)])
         }
     }
-    function handleSelectAll(ev) {
-        const {checked} = ev.target;
-        if (checked) {
-            onChange(['wifi', 'parking', 'elevator', 'washing', 'pets', 'clean']);
-        } else {
-            onChange([]);
-        }
-    }
   return (
     <> 
-        <label className='border p-4 flex rounded-2xl gap-2 items-center cursor-pointer'>
-            <input type="checkbox" 
-                   checked={selected.length === 6} 
-                   onChange={handleSelectAll} />
-            <span>Chọn tất cả</span>
-        </label>
         <label className='border p-4 flex rounded-2xl gap-2 items-center cursor-pointer'>
             <input type="checkbox" checked={selected.includes('wifi')} name='wifi' onChange={handleCbClick}/>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">

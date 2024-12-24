@@ -89,7 +89,7 @@ function RegisterPage() {
                 <form className="max-w-lg mx-auto" onSubmit={registerUser}>
                     <input
                         type="text"
-                        placeholder="Tran Tam"
+                        placeholder="Nhat Khanh"
                         value={name}
                         onChange={(ev) => handleInputChange('name', ev.target.value)}
                         className="w-full px-4 py-2 border border-gray-300 rounded"
