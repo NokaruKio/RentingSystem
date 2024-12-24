@@ -13,7 +13,7 @@ function ProtectedRoute({ children }) {
   }
 
   // Check if the user is not an admin
-  if (!admin) {
+  if (!admin && window.location.pathname !== '/profile-visit') {
     return <Navigate to="/admin/login" />;
   }
 
