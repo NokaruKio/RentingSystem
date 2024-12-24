@@ -16,6 +16,16 @@ function BookingWidget({place}) {
         }
     }, [place.bookings, user])
 
+    // không hiểu sao viết như này lại không được:)))
+
+    // useEffect(() => {
+    //     const userBooking = place?.bookings?.find(booking => booking.userId === user.id) 
+    //     if (userBooking) {
+    //         setIsBooked(true)
+    //     } else {
+    //         setIsBooked(false)
+    //     }
+    // }, [place.bookings, user])
 
     async function bookThisPlace() {
         const data = {

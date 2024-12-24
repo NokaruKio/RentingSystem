@@ -165,3 +165,5 @@ function PlaceGallery({ place }) {
 }
 
 export default PlaceGallery;
+
+
