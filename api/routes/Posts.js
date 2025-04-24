@@ -696,6 +696,15 @@ router.post('/comments', async (req, res) => {
     const { userId, placeId, content } = req.body;
 
     try {
+        // Moderate the content
+        const moderationResult = await moderateContent(content);
+        if (moderationResult.flagged) {
+            return res.status(400).json({
+                message: 'Your comment contains inappropriate content.',
+                categories: moderationResult.categories,
+            });
+        }
+
         // Lấy danh sách các booking hợp lệ
         const bookings = await prisma.booking.findMany({
             where: {
@@ -913,5 +922,93 @@ router.post('/mark-as-read', async (req, res) => {
       }
     });
 });
+
+const { OpenAI } = require('openai');
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+// Dynamically import and initialize Pinecone client
+let index;
+const initPineconePromise = (async () => {
+  const pineconeMod = await import('@pinecone-database/pinecone');
+  // Unwrap default export for CJS
+  const pineconePkg = pineconeMod.default ?? pineconeMod;
+  // Determine constructor: prefer PineconeClient, fallback to Pinecone
+  const PineconeClient = pineconePkg.PineconeClient ?? pineconePkg.Pinecone ?? pineconePkg;
+  if (typeof PineconeClient !== 'function') {
+    console.error('Invalid PineconeClient constructor:', PineconeClient);
+    return;
+  }
+  // Initialize Pinecone client directly with valid configuration
+  const pineconeClient = new PineconeClient({
+    apiKey: process.env.PINECONE_API_KEY,
+  });
+  // Assuming the client is ready to use after construction
+  index = pineconeClient.Index('rentals');
+  console.log('Pinecone initialized');
+})();
+initPineconePromise.catch(err => console.error('Error initializing Pinecone:', err));
+
+router.get('/semantic-search', async (req, res) => {
+  await initPineconePromise;
+  const { q, topK = 10 } = req.query;
+  try {
+    const eRsp = await openai.embeddings.create({ model: 'text-embedding-ada-002', input: q });
+    const queryVector = eRsp.data[0].embedding;
+    const pineRsp = await index.query({ vector: queryVector, topK: parseInt(topK), includeMetadata: true });
+    const ids = pineRsp.matches.map(m => Number(m.id));
+    const posts = await prisma.post.findMany({ where: { id: { in: ids } } });
+    return res.json(posts);
+  } catch (err) {
+    console.error('Semantic-search error:', err);
+    // Quota/rate-limit
+    if (err.status === 429) {
+      return res.status(503).json({
+        error: 'Semantic search temporarily unavailable. Please try again later.'
+      });
+    }
+    // Other errors
+    return res.status(500).json({ error: err.message });
+  }
+});
+
+router.post('/chatbot', async (req, res) => {
+  const { message } = req.body;
+
+  try {
+    const response = await openai.chat.completions.create({
+      model: 'gpt-3.5-turbo',
+      messages: [{ role: 'user', content: message }],
+    });
+
+    const botReply = response.choices[0].message.content;
+    res.json({ reply: botReply });
+  } catch (error) {
+    console.error('Chatbot error:', error.stack || error);
+    // Return the real error message for debugging (remove in production)
+    res.status(500).json({ error: error.message || error.toString() });
+  }
+});
+
+// Function to moderate content using OpenAI's Moderation API
+async function moderateContent(content) {
+  try {
+    const moderationResponse = await openai.moderations.create({
+      input: content,
+    });
+
+    const results = moderationResponse.results[0];
+    if (results.flagged) {
+      return {
+        flagged: true,
+        categories: results.categories,
+        categoryScores: results.category_scores,
+      };
+    }
+    return { flagged: false };
+  } catch (error) {
+    console.error('Moderation error:', error);
+    throw new Error('Failed to moderate content.');
+  }
+}
 
 module.exports = router;

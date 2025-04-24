@@ -41,6 +41,10 @@ function Header() {
           </svg>
           <span className="font-bold text-xl">phongtro365</span>
         </Link>
+        {/* Chatbot Link */}
+        <Link to={'/chatbot'} className="ml-4 text-blue-500 hover:underline">
+          Chatbot
+        </Link>
         <div className='flex gap-2'>
           {user && <NotificationButton />}
           {/* User Section */}

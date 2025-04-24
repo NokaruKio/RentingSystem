@@ -16,6 +16,8 @@ import { RequireAuth } from './components/RequireAuth';
 import FavouritePage from './pages/FavouritePage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
+import SemanticSearch from './components/SemanticSearch';
+import Chatbot from './components/Chatbot';
 
 axios.defaults.baseURL = 'http://localhost:4000';
 axios.defaults.withCredentials = true;
@@ -46,6 +48,8 @@ function App() {
               </RedirectIfAuthenticated>
             }
           />
+          <Route path="/search" element={<SemanticSearch />} />
+          <Route path="/chatbot" element={<Chatbot />} />
         </Route>
 
         {/* Route yêu cầu đăng nhập */}
