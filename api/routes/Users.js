@@ -203,10 +203,10 @@ router.get('/profile', (req,res) => {
     if(token) {
         jwt.verify(token, jwtSecret, {} , async (err, userData) => {
             if(err) throw err
-            const {name, email, id, avatar, phone, zalo, status, createdAt, violationCount} = await prisma.user.findUnique({
+            const {name, email, id, avatar, phone, birthDate, status, createdAt, violationCount} = await prisma.user.findUnique({
                 where: {id: userData.id}
             })
-            res.json({name, email, id, avatar, phone, zalo, status, createdAt, violationCount})
+            res.json({name, email, id, avatar, phone, birthDate, status, createdAt, violationCount})
         })
     } else {
         res.json(null) 
@@ -303,8 +303,8 @@ router.post('/change-password', async (req, res) => {
 });
 
 router.post('/update-profile', async (req, res) => {
-    const {token} = req.cookies
-    const { name, phone, zalo } = req.body; // Dữ liệu cập nhật
+    const {token} = req.cookies;
+    const { name, phone, birthDate } = req.body; // Dữ liệu cập nhật
 
     if(token) {
         let userId
@@ -320,7 +320,7 @@ router.post('/update-profile', async (req, res) => {
                 data: {
                     name: name || undefined,
                     phone: phone || undefined,
-                    zalo: zalo || undefined,
+                    birthDate: birthDate ? new Date(birthDate) : undefined,
                 },
             });
     

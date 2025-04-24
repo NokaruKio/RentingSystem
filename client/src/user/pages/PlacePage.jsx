@@ -461,7 +461,7 @@ function PlacePage() {
                         </div>
                     </div>
 
-                    {/* Hàng 2: Số điện thoại và Zalo */}
+                    {/* Hàng 2: Số điện thoại và Ngày sinh */}
                     <div className="grid grid-cols-2 gap-6">
                         <div className="relative ml-8">
                             <p className="text-gray-600 font-semibold text-xl">Số điện thoại</p>
@@ -479,18 +479,24 @@ function PlacePage() {
                             </div>
                         </div>
                         <div className="relative">
-                            <p className="text-gray-600 font-semibold text-xl">Zalo</p>
+                            <p className="text-gray-600 font-semibold text-xl">Ngày sinh</p>
                             <div className="flex items-center">
-                            <p className="text-gray-800 font-medium">{place.owner.zalo ? place.owner.zalo : 'Chưa cập nhật'}</p>
-                            <button
-                                onClick={() => navigator.clipboard.writeText(place.owner.zalo)}
-                                className="ml-2 text-gray-500 hover:text-gray-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                                title="Copy Zalo"
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75" />
-                                </svg>
-                            </button>
+                            {place.owner.birthDate ? (
+                                <>
+                                  <p className="text-gray-800 font-medium">{new Date(place.owner.birthDate).toLocaleDateString('vi-VN')}</p>
+                                  <button
+                                      onClick={() => navigator.clipboard.writeText(new Date(place.owner.birthDate).toLocaleDateString('vi-VN'))}
+                                      className="ml-2 text-gray-500 hover:text-gray-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                                      title="Copy ngày sinh"
+                                  >
+                                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5">
+                                          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75" />
+                                      </svg>
+                                  </button>
+                                </>
+                            ) : (
+                                <p className="text-gray-800 font-medium">Chưa cập nhật</p>
+                            )}
                             </div>
                         </div>
                     </div>

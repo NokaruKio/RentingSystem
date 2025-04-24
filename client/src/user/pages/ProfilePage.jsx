@@ -12,7 +12,7 @@ function ProfilePage() {
   const [updatedInfo, setUpdatedInfo] = useState({
     name: '',
     phone: '',
-    zalo: '',
+    birthDate: '',
   });
   const [passwords, setPasswords] = useState({
     currentPassword: '',
@@ -32,7 +32,7 @@ function ProfilePage() {
       setUpdatedInfo({
         name: user.name || '',
         phone: user.phone || '',
-        zalo: user.zalo || '',
+        birthDate: user.birthDate || '',
       });
     }
   }, [user]);
@@ -85,7 +85,7 @@ function ProfilePage() {
         {
           name: updatedInfo.name,
           phone: updatedInfo.phone,
-          zalo: updatedInfo.zalo,
+          birthDate: updatedInfo.birthDate,
         }
       );
       alert(response.data.message || 'Thông tin cá nhân đã được cập nhật thành công!');
@@ -195,6 +195,17 @@ function ProfilePage() {
     }
   };
 
+  // Calculate max date for birthDate input (at least 1 year old)
+  const today = new Date();
+  const oneYearAgoDate = new Date(today.getFullYear() - 1, today.getMonth(), today.getDate());
+  const oneYearAgo = oneYearAgoDate.toISOString().split('T')[0];
+  // Helper to format date for display
+  const formatDate = (dateStr) => {
+    if (!dateStr) return '';
+    const d = new Date(dateStr);
+    return d.toLocaleDateString('vi-VN');
+  };
+
   if (!ready) {
     return <div className="text-center mt-10">Loading...</div>;
   }
@@ -256,8 +267,10 @@ function ProfilePage() {
             <span className="text-gray-800 font-semibold text-md pr-4">{user.phone || 'Chưa được cung cấp'}</span>
           </div>
           <div className="flex justify-between border-b pb-4">
-            <span className="text-gray-600 font-semibold text-xl pl-4">Số zalo</span>
-            <span className="text-gray-800 font-semibold text-md pr-4">{user.zalo || 'Chưa được cung cấp'}</span>
+            <span className="text-gray-600 font-semibold text-xl pl-4">Ngày sinh</span>
+            <span className="text-gray-800 font-semibold text-md pr-4">
+              {user.birthDate ? formatDate(user.birthDate) : 'Chưa được cung cấp'}
+            </span>
           </div>
           <div className="flex justify-between border-b pb-4">
             <span className="text-gray-600 font-semibold text-xl pl-4">Số lần vi phạm</span>
@@ -359,13 +372,14 @@ function ProfilePage() {
               />
             </div>
             <div className="mb-4">
-              <label className="block text-gray-700">Zalo</label>
+              <label className="block text-gray-700">Ngày sinh</label>
               <input
-                type="text"
-                name="zalo"
-                value={updatedInfo.zalo}
+                type="date"
+                name="birthDate"
+                value={updatedInfo.birthDate}
                 onChange={handleInfoChange}
                 className="w-full border border-gray-300 rounded-lg p-2"
+                max={oneYearAgo}
               />
             </div>
             <div className="flex justify-end">

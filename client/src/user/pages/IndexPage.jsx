@@ -14,6 +14,8 @@ function IndexPage() {
   const [maxPrice, setMaxPrice] = useState(null); // Giá trị lớn nhất
   const [selectedRange, setSelectedRange] = useState([0, 0]); // Giá trị thanh kéo
   const [isMapVisible, setIsMapVisible] = useState(false); // Trạng thái hiển thị bản đồ
+  const [semanticQuery, setSemanticQuery] = useState("");
+  const [isSemanticSearchVisible, setIsSemanticSearchVisible] = useState(false);
 
   useEffect(() => {
     // Gọi API để lấy danh sách places và min/max price 
@@ -103,6 +105,20 @@ function IndexPage() {
     setFilteredPlaces(filtered); // Cập nhật danh sách đã lọc
   };
   
+  const handleSemanticSearch = async () => {
+    try {
+      const response = await axios.get(`/post/semantic-search?q=${encodeURIComponent(semanticQuery)}`);
+      const results = response.data;
+      setFilteredPlaces(results);
+    } catch (error) {
+      console.error('Semantic search error:', error);
+    }
+  };
+  
+  const toggleSemanticSearch = () => {
+    setIsSemanticSearchVisible(prev => !prev);
+  };
+  
   // Xử lý trường hợp dữ liệu chưa tải xong
   if (minPrice === null || maxPrice === null) {
     return <div>Đang tải dữ liệu...</div>;
@@ -161,6 +177,29 @@ function IndexPage() {
             {isMapVisible ? "Ẩn bản đồ" : "Hiển thị bản đồ"}
           </button>
         </div>
+        <button
+          onClick={toggleSemanticSearch}
+          className="mt-2 font-bold text-gray-800 bg-gray-200 mx-auto block"
+        >
+          {isSemanticSearchVisible ? "Ẩn tìm kiếm thông minh" : "Hiển thị tìm kiếm thông minh"}
+        </button>
+        {isSemanticSearchVisible && (
+          <div className="mt-4">
+            <input
+              type="text"
+              placeholder="Tìm kiếm thông minh"
+              value={semanticQuery}
+              onChange={(e) => setSemanticQuery(e.target.value)}
+              className="p-2 border rounded w-full mt-2"
+            />
+            <button
+              onClick={handleSemanticSearch}
+              className="primary mt-2"
+            >
+              Tìm kiếm thông minh
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Phần danh sách nhà và bản đồ */}

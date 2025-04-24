@@ -4,13 +4,18 @@ import axios from 'axios';
 export default function Chatbot() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
   const bottomRef = useRef(null);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  async function sendMessage() {
+  const handleToggle = () => {
+    setIsOpen(prev => !prev);
+  };
+
+  const sendMessage = async () => {
     if (!input.trim()) return;
     const userMsg = { role: 'user', content: input };
     setMessages(prev => [...prev, userMsg]);
@@ -20,48 +25,64 @@ export default function Chatbot() {
       setMessages(prev => [...prev, botMsg]);
     } catch (e) {
       const serverError = e.response?.data?.error || e.message;
-      console.error('Chatbot error:', serverError);
-      const errMsg = { role: 'assistant', content: serverError };
-      setMessages(prev => [...prev, errMsg]);
+      setMessages(prev => [...prev, { role: 'assistant', content: serverError }]);
     }
     setInput('');
-  }
+  };
 
-  function handleKeyDown(e) {
+  const handleKeyDown = e => {
     if (e.key === 'Enter') sendMessage();
-  }
+  };
 
   return (
-    <div className="p-4 flex flex-col h-full">
-      <div className="flex-1 overflow-auto mb-4">
-        {messages.map((msg, idx) => (
-          <div
-            key={idx}
-            className={`mb-2 px-3 py-2 rounded-lg ${
-              msg.role === 'user' ? 'bg-blue-100 self-end' : 'bg-gray-100 self-start'
-            }`}
-          >
-            {msg.content}
-          </div>
-        ))}
-        <div ref={bottomRef} />
-      </div>
-      <div className="flex">
-        <input
-          className="flex-1 border rounded-l-lg px-3 py-2"
-          type="text"
-          placeholder="Gõ tin nhắn..."
-          value={input}
-          onChange={e => setInput(e.target.value)}
-          onKeyDown={handleKeyDown}
-        />
+    <div className="fixed bottom-4 right-4 z-50">
+      {!isOpen && (
         <button
-          onClick={sendMessage}
-          className="bg-blue-500 text-white px-4 py-2 rounded-r-lg"
+          onClick={handleToggle}
+          className="w-80 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg"
         >
-          Gửi
+          Mở Chatbot
         </button>
-      </div>
+      )}
+      {isOpen && (
+        <div className="w-80 h-96 flex flex-col border rounded-lg shadow-lg bg-white">
+          <button
+            onClick={handleToggle}
+            className="w-full bg-blue-500 text-white px-4 py-2 rounded-t-lg"
+          >
+            Đóng Chatbot
+          </button>
+          <div className="p-4 flex-1 overflow-auto">
+            {messages.map((msg, idx) => (
+              <div
+                key={idx}
+                className={`mb-2 px-3 py-2 rounded-lg break-words whitespace-pre-wrap text-justify ${
+                  msg.role === 'user' ? 'bg-blue-100 self-end' : 'bg-gray-100 self-start'
+                }`}
+              >
+                {msg.content}
+              </div>
+            ))}
+            <div ref={bottomRef} />
+          </div>
+          <div className="flex border-t">
+            <input
+              type="text"
+              placeholder="Gõ tin nhắn..."
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              className="flex-1 px-3 py-2 rounded-bl-lg border-r"
+            />
+            <button
+              onClick={sendMessage}
+              className="bg-blue-500 text-white px-4 py-2 rounded-br-lg"
+            >
+              Gửi
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 } 

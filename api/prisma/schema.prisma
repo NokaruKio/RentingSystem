@@ -25,7 +25,7 @@ model User {
   password         String
   avatar           String?
   phone            String?
-  zalo             String?
+  birthDate        DateTime?
   createAt         DateTime       @default(now())
   updateAt         DateTime       @updatedAt
   places           Place[]        @relation("UserPlaces") // Khi xóa User, xóa Place liên quan

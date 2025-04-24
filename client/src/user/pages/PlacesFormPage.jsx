@@ -85,22 +85,22 @@ function PlacesFormPage() {
             setDescriptionError('');
         }
 
-        if (!area) {
-            setAreaError('Vui lòng nhập diện tích');
+        if (area <= 0) {
+            setAreaError('Bạn phải để diện tích lớn hơn 0');
             isValid = false;
         } else {
             setAreaError('');
         }
 
-        if (!duration) {
-            setDurationError('Vui lòng nhập thời hạn hợp đồng');
+        if (duration <= 0) {
+            setDurationError('Bạn phải để thời hạn lớn hơn 0');
             isValid = false;
         } else {
             setDurationError('');
         }
 
-        if (!price) {
-            setPriceError('Vui lòng nhập giá');
+        if (price <= 0) {
+            setPriceError('Bạn phải để giá lớn hơn 0');
             isValid = false;
         } else {
             setPriceError('');
@@ -222,6 +222,7 @@ function PlacesFormPage() {
                             value={area}
                             onChange={handleInputChange(setArea, setAreaError)}
                             className={areaError ? 'border-red-500' : ''}
+                            min="1"
                         />
                         {areaError && <p className="text-red-500 text-sm">{areaError}</p>}
                     </div>
@@ -232,6 +233,7 @@ function PlacesFormPage() {
                             value={duration}
                             onChange={handleInputChange(setDuration, setDurationError)}
                             className={durationError ? 'border-red-500' : ''}
+                            min="1"
                         />
                         {durationError && <p className="text-red-500 text-sm">{durationError}</p>}
                     </div>
@@ -242,6 +244,7 @@ function PlacesFormPage() {
                             value={price}
                             onChange={handleInputChange(setPrice, setPriceError)}
                             className={priceError ? 'border-red-500' : ''}
+                            min="1"
                         />
                         {priceError && <p className="text-red-500 text-sm">{priceError}</p>}
                     </div>

@@ -294,7 +294,7 @@ router.get('/place/:id', async (req, res) => {
                         name: true,
                         avatar: true,
                         phone: true,
-                        zalo: true,
+                        birthDate: true,
                         violationCount: true,
                         createAt: true,
                         status: true
@@ -319,7 +319,7 @@ router.get('/place/:id', async (req, res) => {
                                 email: true,
                                 avatar: true,
                                 phone: true,
-                                zalo: true,
+                                birthDate: true,
                             },
                         },
                     },
@@ -369,14 +369,18 @@ router.get('/placedetail/:id', async (req, res) => {
                 bookings: {
                     include: {
                         comments: true,
-                        invoices: true,
+                        invoices: {
+                            include: {
+                                photos: true
+                            }
+                        },
                         renter: {
                             select: {
                                 id: true,
                                 name: true,
                                 avatar: true,
                                 phone: true,
-                                zalo: true,
+                                birthDate: true,
                             },
                         },
                     },
@@ -390,7 +394,7 @@ router.get('/placedetail/:id', async (req, res) => {
                                 email: true,
                                 avatar: true,
                                 phone: true,
-                                zalo: true,
+                                birthDate: true,
                             },
                         },
                     },

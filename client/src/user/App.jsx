@@ -25,6 +25,7 @@ axios.defaults.withCredentials = true;
 function App() {
   return (
     <UserContextProvider>
+      <Chatbot />
       <Routes>
         {/* Route công khai không yêu cầu đăng nhập */}
         <Route path="/" element={<Layout />}>
@@ -49,7 +50,6 @@ function App() {
             }
           />
           <Route path="/search" element={<SemanticSearch />} />
-          <Route path="/chatbot" element={<Chatbot />} />
         </Route>
 
         {/* Route yêu cầu đăng nhập */}

@@ -23,8 +23,8 @@ function PlacesPage() {
   const placesDelete = places.filter(place => place.status === 'DELETE');
 
   const handleAddPlace = () => {
-    // Kiểm tra xem user có phone và zalo chưa
-    if (user?.phone && user?.zalo) {
+    // Kiểm tra xem user có phone và ngày sinh chưa
+    if (user?.phone && user?.birthDate) {
       navigate('/account/places/new');   // Chuyển hướng đến trang thêm nhà mới
     } else {
       setShowPopup(true);  // Hiển thị popup nếu thiếu thông tin
@@ -70,18 +70,16 @@ function PlacesPage() {
 
   return (
     <div className='mb-4 lg:mx-16'>
-      <div className='fixed right-12 bottom-12 group z-30'>
-        <div className='text-center'>
-          <button
-            onClick={handleAddPlace}
-            className='inline-flex gap-1 bg-primary text-white py-2 px-4 rounded-full'
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 10.5v6m3-3H9m4.06-7.19-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z" />
-            </svg>
-            Thêm nhà mới
-          </button>
-        </div>
+      <div className='flex justify-between items-center mb-8'>
+        <button
+          onClick={handleAddPlace}
+          className='inline-flex gap-1 bg-primary text-white py-2 px-4 rounded-full'
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 10.5v6m3-3H9m4.06-7.19-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z" />
+          </svg>
+          Thêm nhà mới
+        </button>
       </div>
 
       {/* Hiển thị các nhà theo từng status */}
@@ -94,7 +92,7 @@ function PlacesPage() {
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-40">
           <div className="bg-white p-6 rounded-lg max-w-sm">
             <h3 className="text-xl font-semibold">Thông báo</h3>
-            <p className="mt-2">Bạn cần cập nhật đầy đủ thông tin tài khoản (phone và zalo) trước khi thêm nhà mới.</p>
+            <p className="mt-2">Bạn cần cập nhật đầy đủ thông tin tài khoản (phone và ngày sinh) trước khi thêm nhà mới.</p>
             <div className="mt-4 text-center">
               <button
                 onClick={() => setShowPopup(false)}
