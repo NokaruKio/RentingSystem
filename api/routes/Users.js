@@ -587,7 +587,6 @@ router.get('/profile/:id', async (req, res) => {
           name: true,
           avatar: true,
           phone: true,
-          zalo: true,
           status: true,
           createAt: true, 
           violationCount: true,
